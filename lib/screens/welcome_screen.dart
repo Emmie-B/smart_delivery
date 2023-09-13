@@ -22,7 +22,7 @@ class WelcomeScreen extends StatelessWidget {
               child: Image.asset('assets/images/e-delivery_bg.jpeg',
                   fit: BoxFit.cover,
                   // color: Color.fromRGBO(255, 230, 179, 1.0).withOpacity(1),
-                  color: Color.fromRGBO(255, 230, 179, 1.0).withOpacity(1),
+                  color: const Color.fromRGBO(255, 230, 179, 1.0).withOpacity(1),
                   colorBlendMode: BlendMode
                       .modulate // Adjust the image fitting as per your requirement
                   ),

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:e_delivery/constants.dart';
 import 'package:e_delivery/widgets/major_button.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -14,7 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ConfirmDeliveryProcess extends StatefulWidget {
-  ConfirmDeliveryProcess({super.key, this.args});
+  const ConfirmDeliveryProcess({super.key, this.args});
   final ConfirmDeliveryArguments? args;
 
   @override
@@ -25,7 +24,7 @@ class _ConfirmDeliveryProcessState extends State<ConfirmDeliveryProcess> {
   final _formKey = GlobalKey<FormBuilderState>();
   bool? _picked = false;
   bool? _is_verified = false;
-  HandSignatureControl control = new HandSignatureControl(
+  HandSignatureControl control = HandSignatureControl(
     threshold: 0.01,
     smoothRatio: 0.45,
     velocityRange: 1.5,
@@ -35,9 +34,10 @@ class _ConfirmDeliveryProcessState extends State<ConfirmDeliveryProcess> {
 
   Future pickImagefromGallery() async {
     // final img = await ImagePicker().pickImage(source: ImageSource.camera);
-    final img = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final img = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (img == null) return;
     setState(() {
-      selectedImg = File(img!.path);
+      selectedImg = File(img.path);
     });
   }
 
@@ -237,8 +237,12 @@ class _ConfirmDeliveryProcessState extends State<ConfirmDeliveryProcess> {
                     _buildSvgView(img),
                     6.horizontalSpace,
                     selectedImg != null
-                        ? Image.file(selectedImg!)
-                        : Text('Choose Img')
+                        ? Image.file(
+                            selectedImg!,
+                            width: 100,
+                            height: 200,
+                          )
+                        : const Text('Choose Img')
                   ],
                 ),
                 GestureDetector(
@@ -263,8 +267,8 @@ class _ConfirmDeliveryProcessState extends State<ConfirmDeliveryProcess> {
           return SizedBox(
             height: 0.6.sh,
             child: CupertinoAlertDialog(
-              title: Text('Sign Here'),
-              content: Container(
+              title: const Text('Sign Here'),
+              content: SizedBox(
                 height: 0.6.sh,
                 width: 0.75.sw,
                 child: HandSignature(
@@ -281,11 +285,11 @@ class _ConfirmDeliveryProcessState extends State<ConfirmDeliveryProcess> {
                     control.clear();
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 TextButton(
                   onPressed: () async {
-                    img.value = await control.toSvg(
+                    img.value = control.toSvg(
                       color: Colors.blueGrey,
                       type: SignatureDrawType.shape,
                       fit: true,
@@ -295,7 +299,7 @@ class _ConfirmDeliveryProcessState extends State<ConfirmDeliveryProcess> {
                     control.clear();
                     Navigator.pop(context);
                   },
-                  child: Text('Confirm'),
+                  child: const Text('Confirm'),
                 ),
               ],
             ),
@@ -317,19 +321,19 @@ Widget _buildSvgView(img) => Container(
           if (data == null) {
             return Container(
               color: Colors.red,
-              child: Center(
+              child: const Center(
                 child: Text('not signed yet (svg)'),
               ),
             );
           }
 
           return Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: SvgPicture.string(
               data,
               placeholderBuilder: (_) => Container(
                 color: Colors.lightBlueAccent,
-                child: Center(
+                child: const Center(
                   child: Text('parsing data(svg)'),
                 ),
               ),
@@ -355,7 +359,7 @@ Widget _imagePicker(img) => Container(
 
           return GestureDetector(
             onTap: () {},
-            child: Padding(
+            child: const Padding(
               padding: EdgeInsets.all(8.0),
               child: Icon(
                 Icons.camera_alt_outlined,

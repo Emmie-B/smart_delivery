@@ -1,21 +1,17 @@
-import 'package:e_delivery/constants.dart';
-import 'package:e_delivery/screens/settings.dart';
 import 'package:e_delivery/widgets/delivery_note_card.dart';
-import 'package:e_delivery/widgets/floatingSearchBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:searchable_listview/searchable_listview.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class TrackScreen extends StatefulWidget {
-  TrackScreen({super.key});
+  const TrackScreen({super.key});
 
   @override
   State<TrackScreen> createState() => _TrackScreenState();
 }
 
 class _TrackScreenState extends State<TrackScreen> {
-  final TextEditingController _searchController = TextEditingController();
+  // final TextEditingController _searchController = TextEditingController();
 
   List<Map<String, dynamic>> data = [
     {
@@ -114,17 +110,17 @@ class _TrackScreenState extends State<TrackScreen> {
   }
 
   void _runFilter(value) {
-    List<Map<String, dynamic>> _result = [];
+    List<Map<String, dynamic>> result = [];
     if (value.isEmpty) {
-      _result = data;
+      result = data;
     } else {
-      _result = data
+      result = data
           .where((notes) =>
               notes['customerName'].toLowerCase().contains(value.toLowerCase()))
           .toList();
     }
     setState(() {
-      _foundeNotes = _result;
+      _foundeNotes = result;
     });
   }
 
@@ -149,8 +145,8 @@ class _TrackScreenState extends State<TrackScreen> {
                     filled: true,
                     fillColor: Colors.white,
                     hintText: "Search Client Name",
-                    hintStyle: TextStyle(color: Colors.grey),
-                    prefixIcon: Icon(Icons.search),
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    prefixIcon: const Icon(Icons.search),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
                     border: OutlineInputBorder(

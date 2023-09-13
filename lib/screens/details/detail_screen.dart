@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants.dart';
 
 class DetailScreen extends StatelessWidget {
-  DetailScreen({this.args});
+  const DetailScreen({super.key, this.args});
   final DeliveryDetailArguments? args;
 
   @override
@@ -134,7 +134,7 @@ class DetailScreen extends StatelessWidget {
                       ),
 
                       TextButton(
-                          onPressed: () {}, child: Text('Share with Client'))
+                          onPressed: () {}, child: const Text('Share with Client'))
                       // Text(
                       //   'Customer Address: ${args!.customerAddress!}',
                       //   style: TextStyle(fontSize: 15.sp),

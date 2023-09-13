@@ -3,7 +3,6 @@ import 'package:e_delivery/screens/orders.dart';
 import 'package:e_delivery/screens/settings.dart';
 import 'package:e_delivery/screens/track_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  static List screens = [TrackScreen(), OrderScreen(), SettingsScreen()];
+  static List screens = [const TrackScreen(), const OrderScreen(), const SettingsScreen()];
 
   @override
   Widget build(BuildContext context) {
