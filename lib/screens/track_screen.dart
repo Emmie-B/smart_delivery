@@ -1,179 +1,211 @@
+import 'package:e_delivery/Providers/providers.dart';
+import 'package:e_delivery/domain/models/delivery_note_model.dart';
+import 'package:e_delivery/screens/welcome_screen.dart';
+import 'package:e_delivery/service/api_services.dart';
 import 'package:e_delivery/widgets/delivery_note_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:searchable_listview/searchable_listview.dart';
 
-class TrackScreen extends StatefulWidget {
+class TrackScreen extends ConsumerStatefulWidget {
   const TrackScreen({super.key});
 
   @override
-  State<TrackScreen> createState() => _TrackScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TrackScreenState();
 }
 
-class _TrackScreenState extends State<TrackScreen> {
+class _TrackScreenState extends ConsumerState<TrackScreen> {
   // final TextEditingController _searchController = TextEditingController();
+  APIServices? apiServices;
 
-  List<Map<String, dynamic>> data = [
-    {
-      "id": "1",
-      "clientId": "1001",
-      "staffId": "S123",
-      "customerName": "John Smith",
-      "receiversName": "Alice Johnson",
-      "address": "123 Main Street, Cityville",
-      "itemType": "Electronics",
-      "estimatedDateOfDelivery": "2023-09-10",
-      "itemDescription": "Smartphone",
-      "itemQuantity": "1",
-      "customerPhone": "+1 (555) 123-4567",
-      "receiversPhone": "+1 (555) 987-6543",
-      "otp": "7890",
-      "signature": "Signature001.png",
-      "photo": "DeliveryPhoto001.jpg",
-      "attachment": "Invoice001.pdf",
-      "status": "Pending",
-      "createdAt": "2023-09-01 08:30:00",
-      "updatedAt": "2023-09-01 08:30:00"
-    },
-    {
-      "id": "2",
-      "clientId": "1002",
-      "staffId": "S124",
-      "customerName": "Emily Davis",
-      "receiversName": "Mark Wilson",
-      "address": "456 Oak Avenue, Townsville",
-      "itemType": "Clothing",
-      "estimatedDateOfDelivery": "2023-09-12",
-      "itemDescription": "Designer Dress",
-      "itemQuantity": "2",
-      "customerPhone": "+1 (555) 222-3333",
-      "receiversPhone": "+1 (555) 777-8888",
-      "otp": "4567",
-      "signature": "Signature002.png",
-      "photo": "DeliveryPhoto002.jpg",
-      "attachment": "Receipt002.pdf",
-      "status": "Delivered",
-      "createdAt": "2023-09-02 10:15:00",
-      "updatedAt": "2023-09-02 12:45:00"
-    },
-    {
-      "id": "3",
-      "clientId": "1003",
-      "staffId": "S125",
-      "customerName": "Sarah Brown",
-      "receiversName": "Michael Taylor",
-      "address": "789 Pine Lane, Villagetown",
-      "itemType": "Books",
-      "estimatedDateOfDelivery": "2023-09-15",
-      "itemDescription": "Fantasy Novels Set",
-      "itemQuantity": "5",
-      "customerPhone": "+1 (555) 333-4444",
-      "receiversPhone": "+1 (555) 999-0000",
-      "otp": "1234",
-      "signature": "Signature003.png",
-      "photo": "DeliveryPhoto003.jpg",
-      "attachment": "Invoice003.pdf",
-      "status": "Delivered",
-      "createdAt": "2023-09-03 09:45:00",
-      "updatedAt": "2023-09-03 11:30:00"
-    },
-    {
-      "id": "4",
-      "clientId": "1004",
-      "staffId": "S126",
-      "customerName": "Robert Johnson",
-      "receiversName": "Linda Martinez",
-      "address": "1010 Elm Street, Suburbia",
-      "itemType": "Home Appliances",
-      "estimatedDateOfDelivery": "2023-09-20",
-      "itemDescription": "Refrigerator",
-      "itemQuantity": "1",
-      "customerPhone": "+1 (555) 777-6666",
-      "receiversPhone": "+1 (555) 222-1111",
-      "otp": "5678",
-      "signature": "Signature004.png",
-      "photo": "DeliveryPhoto004.jpg",
-      "attachment": "Receipt004.pdf",
-      "status": "In Transit",
-      "createdAt": "2023-09-04 14:20:00",
-      "updatedAt": "2023-09-04 16:00:00"
-    },
-    // Add more data entries as needed...
-  ];
+  List<DeliveryData>? deliveryData;
+  bool _isLoading = false;
 
-  List<Map<String, dynamic>> _foundeNotes = [];
+  // Add more data entries as needed...
 
   @override
   void initState() {
+    fetchStaffNote();
+
     super.initState();
-    _foundeNotes = data;
+    // deliveryData = DeliveryData();
+    apiServices = APIServices();
   }
 
-  void _runFilter(value) {
-    List<Map<String, dynamic>> result = [];
-    if (value.isEmpty) {
-      result = data;
-    } else {
-      result = data
-          .where((notes) =>
-              notes['customerName'].toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    }
+  fetchStaffNote() async {
     setState(() {
-      _foundeNotes = result;
+      _isLoading = true;
     });
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var staff_id = await prefs.getString('staff_id');
+    var client_id = await prefs.getString('client_id');
+    var res = await apiServices!.fetchDeliveryNote(client_id, staff_id);
+    // set string
+    await prefs.setString('note_id', res[0].id);
+    print(client_id);
+
+    if (res == 'No Order Found') {
+      print('tesrthb');
+      print(res);
+    } else {
+      setState(() {
+        deliveryData = res;
+        _isLoading = false;
+      });
+    }
+    // List<DeliveryData> deliveryData = res as List<DeliveryData>;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              elevation: 0,
-              floating: true,
-              expandedHeight: 20.h,
-              backgroundColor: Colors.transparent,
-              flexibleSpace: SizedBox(
-                height: 40,
-                width: double.infinity,
-                child: TextFormField(
-                  onChanged: (value) => _runFilter(value),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: "Search Client Name",
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    prefixIcon: const Icon(Icons.search),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.grey.shade400),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.grey.shade400),
+      appBar: AppBar(
+        toolbarHeight: 130,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Column(
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Hello,',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'Welcome Back',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+                icon: const Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ]),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Track Your Delivery',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                  icon: const Icon(
+                    Icons.home,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                elevation: 0,
+                floating: true,
+                expandedHeight: 20.h,
+                backgroundColor: Colors.transparent,
+                flexibleSpace: SizedBox(
+                  height: 40,
+                  width: double.infinity,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: "Search Client Name",
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      prefixIcon: const Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 10.h, horizontal: 20.w),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(color: Colors.grey.shade400),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(color: Colors.grey.shade400),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return CustomOrderTaskCard(
-                    customerName: _foundeNotes[index]['customerName'],
-                    customerPhone: _foundeNotes[index]['customerPhone'],
-                  );
-                  //
-                },
-                childCount: _foundeNotes.length,
-              ),
-            )
-          ],
+              _isLoading
+                  ? const SliverToBoxAdapter(
+                      child: Center(
+                      child: CircularProgressIndicator(),
+                    ))
+                  : SliverList.builder(
+                      itemBuilder: (context, index) {
+                        return CustomOrderTaskCard(
+                          customerName: deliveryData![index].customerName,
+                          customerPhone: deliveryData![index].customerPhone,
+                          status: deliveryData![index].status,
+                          itemType: deliveryData![index].itemType,
+                          destination: deliveryData![index].address,
+                          itemQuantity: deliveryData![index].itemQuantity,
+                          itemDescription: deliveryData![index].itemDescription,
+                          noteId: deliveryData![index].id,
+                        );
+                      },
+                      itemCount: deliveryData!.length,
+                    ),
+              // notes.when(data: (data) {
+              //   return SliverList.builder(
+              //     itemCount: deliveryData!.length,
+              //     itemBuilder: ((context, index) {
+              //       return CustomOrderTaskCard(
+              //         customerName: deliveryData![index].customerName,
+              //         customerPhone: deliveryData![index].customerPhone,
+              //         status: deliveryData![index].status,
+              //         itemType: deliveryData![index].itemType,
+              //         destination: deliveryData![index].address,
+              //       );
+              //     }),
+              //   );
+              // }, error: (e, s) {
+              //   return SliverToBoxAdapter(
+              //     child: Center(
+              //       child: Text(e.toString() + 'ehte'),
+              //     ),
+              //   );
+              // }, loading: () {
+              //   return
+              //   );
+              // }),
+            ],
+          ),
         ),
       ),
     );

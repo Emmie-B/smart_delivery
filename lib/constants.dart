@@ -23,10 +23,10 @@ TextStyle buttonText = TextStyle(
   letterSpacing: 0.8.sp,
 );
 TextStyle mediumText = TextStyle(
-  color: Colors.grey[400],
+  color: kPrimaryColor,
   fontFamily: 'Montserrat',
   fontSize: 16.0.sp,
-  fontWeight: FontWeight.w300,
+  fontWeight: FontWeight.w600,
   letterSpacing: 0.3.sp,
 );
 TextStyle kdeliveryDetailText = TextStyle(
@@ -43,7 +43,8 @@ TextStyle smallText = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
-const Color kPrimaryColor = Color(0xff724EFA);
+const Color kPrimeColor = Color(0xff724EFA);
+const Color kPrimaryColor = Color(0xff1E1926);
 const Color kPrimaryLightColor = Color(0xffe3dcfe);
 const Color kTextColor = Color(0xff1E1926);
 const Color kWhiteColor = Colors.white;

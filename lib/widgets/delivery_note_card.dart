@@ -4,14 +4,29 @@ import 'package:url_launcher/url_launcher.dart';
 import '../constants.dart';
 import '../utilities/argument.dart';
 
-// cupertino  
+// cupertino
 
 class CustomOrderTaskCard extends StatelessWidget {
-  CustomOrderTaskCard(
-      {super.key, required this.customerName, required this.customerPhone});
+  CustomOrderTaskCard({
+    super.key,
+    required this.customerName,
+    required this.customerPhone,
+    this.status,
+    this.itemType,
+    this.destination,
+    this.itemQuantity,
+    this.itemDescription,
+    this.noteId,
+  });
   String? customerName;
   String? customerPhone;
   Uri? url;
+  String? status;
+  String? itemType;
+  String? destination;
+  String? itemQuantity;
+  String? itemDescription;
+  String? noteId;
 
   Future<void> smsLauncher() async {
     final url = Uri(
@@ -35,7 +50,16 @@ class CustomOrderTaskCard extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(context, '/delivery_details',
             arguments: DeliveryDetailArguments(
-                customerName: customerName, customerPhone: customerPhone));
+              customerName: customerName,
+              customerPhone: customerPhone,
+              itemType: itemType,
+              destination: destination,
+              itemQuantity: itemQuantity,
+              // estimatedDateOfDelivery: '2023-09-04 14:20:00',
+              itemDescription: itemDescription,
+              noteId: noteId,
+              status: status
+            ));
       },
       child: Card(
         color: Colors.white,
@@ -43,8 +67,12 @@ class CustomOrderTaskCard extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Container(
           padding: const EdgeInsets.all(10).w,
-          height: 167,
-          width: 350,
+          height: 165.h,
+          width: 0.9.sw,
+          constraints: BoxConstraints(
+            minHeight: 165.h,
+            minWidth: 0.9.sw,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,15 +87,20 @@ class CustomOrderTaskCard extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(4),
                             width: 100,
-                            height: 25,
+                            height: 24,
                             decoration: BoxDecoration(
-                                color: Colors.yellow[50],
-                                borderRadius: BorderRadius.circular(20)),
+                              color: status == 'Pending'
+                                  ? Colors.yellow[50]
+                                  : Colors.green[50],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                             child: Center(
                               child: Text(
-                                'PENDING',
+                                status!,
                                 style: TextStyle(
-                                    color: Colors.yellow[600],
+                                    color: status == 'Pending'
+                                        ? Colors.yellow[600]
+                                        : Colors.green[600],
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -75,12 +108,12 @@ class CustomOrderTaskCard extends StatelessWidget {
                           ),
                           5.horizontalSpace,
                           Text(
-                            'Order: #4916',
+                            'Order: #$noteId',
                             style: smallText,
                           ),
                         ],
                       ),
-                      5.verticalSpace,
+                      3.verticalSpace,
                       Row(
                         textBaseline: TextBaseline.ideographic,
                         children: [
@@ -91,10 +124,10 @@ class CustomOrderTaskCard extends StatelessWidget {
                             style: smallText,
                           ),
                           2.horizontalSpace,
-                          const Text('Box'),
+                          Text(itemType!),
                         ],
                       ),
-                      5.verticalSpace,
+                      3.verticalSpace,
                       Row(
                         textBaseline: TextBaseline.ideographic,
                         children: [
@@ -105,10 +138,10 @@ class CustomOrderTaskCard extends StatelessWidget {
                             style: smallText,
                           ),
                           2.horizontalSpace,
-                          const Expanded(
+                          Expanded(
                             flex: 0,
                             child: Text(
-                              "7 Malama",
+                              destination!,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               softWrap: false,

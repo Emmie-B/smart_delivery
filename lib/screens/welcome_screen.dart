@@ -1,9 +1,34 @@
 import 'package:e_delivery/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    getVlidationData(context);
+  }
+
+  getVlidationData(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var phone = await prefs.getString('phone');
+    var password = await prefs.getString('password');
+    if (phone != null && password != null) {
+      Navigator.pushNamed(context, '/home');
+    } else {
+      Navigator.pushNamed(context, '/login');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +47,8 @@ class WelcomeScreen extends StatelessWidget {
               child: Image.asset('assets/images/e-delivery_bg.jpeg',
                   fit: BoxFit.cover,
                   // color: Color.fromRGBO(255, 230, 179, 1.0).withOpacity(1),
-                  color: const Color.fromRGBO(255, 230, 179, 1.0).withOpacity(1),
+                  color:
+                      const Color.fromRGBO(255, 230, 179, 1.0).withOpacity(1),
                   colorBlendMode: BlendMode
                       .modulate // Adjust the image fitting as per your requirement
                   ),

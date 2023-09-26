@@ -6,162 +6,159 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants.dart';
 
 class DetailScreen extends StatelessWidget {
-  const DetailScreen({super.key, this.args});
+  const DetailScreen({Key? key, this.args}) : super(key: key);
+
   final DeliveryDetailArguments? args;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // toolbarHeight: 0,
         elevation: 0,
         title: Text(
-          'Delivery For: ${args!.customerName!}',
-          style: TextStyle(fontSize: 15.sp),
+          'Delivery For: ${args?.customerName ?? ""}', // Use null safety
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Card(
-              elevation: 2.0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: SizedBox(
-                height: 250.w,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Center(
-                        child: Text('Delivery Details'),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Item Type',
-                            style: kdeliveryDetailText,
-                          ),
-                          Text(
-                            // args!.customerName!,
-                            'Box',
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                        ],
-                      ),
-                      3.verticalSpace,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Quantity',
-                            style: kdeliveryDetailText,
-                          ),
-                          Text(
-                            // args!.customerName!,
-                            '1',
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                        ],
-                      ),
-                      3.verticalSpace,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Client Name',
-                            style: kdeliveryDetailText,
-                          ),
-                          Text(
-                            args!.customerName!,
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Client Number',
-                            style: kdeliveryDetailText,
-                          ),
-                          Text(
-                            args!.customerPhone!,
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Address',
-                            style: kdeliveryDetailText,
-                          ),
-                          Text(
-                            // args!.customerPhone!,
-                            '7 Malama Thomas Street',
-                            softWrap: true,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Description',
-                            style: kdeliveryDetailText,
-                          ),
-                          Text(
-                            // args!.customerPhone!,
-                            'This is a description for the delivery note. Please',
-                            softWrap: true,
-                            maxLines: 2,
-
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                        ],
-                      ),
-
-                      TextButton(
-                          onPressed: () {}, child: const Text('Share with Client'))
-                      // Text(
-                      //   'Customer Address: ${args!.customerAddress!}',
-                      //   style: TextStyle(fontSize: 15.sp),
-                      // ),
-                    ],
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
                   ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildStatusWidget(
+                      "Item Type", args?.itemType ?? "", kPrimaryColor),
+                  const VerticalDivider(color: kPrimaryColor),
+                  _buildStatusWidget(
+                    "Quantity",
+                    args?.itemQuantity ?? "",
+                    kPrimaryColor,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                // color: kPrimeColor,
+                color: Colors.black45,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: const Text(
+                        'Delivery Details',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                    16.verticalSpace,
+                    // Modify with actual quantity
+                    _buildDetailRow("Client Name", args?.customerName ?? ""),
+                    _buildDetailRow("Client Number", args?.customerPhone ?? ""),
+                    _buildDetailRow("Address", args?.destination ?? ""),
+                    _buildDetailRow("Description", args?.itemDescription ?? ""),
+                    // Modify with actual description
+                    // 16.verticalSpace,
+
+                    Spacer(),
+
+                    args?.status == "Completed"
+                        ? SizedBox()
+                        : CustomMajorButton(
+                            text: 'Confirm Delivery Details',
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/confirm_delivery_details',
+                                arguments: ConfirmDeliveryArguments(
+                                  customerName: args?.customerName,
+                                  customerPhone: args?.customerPhone,
+                                  noteId: args?.noteId,
+                                ),
+                              );
+                            })
+                  ],
                 ),
               ),
             ),
-            const Spacer(),
-            CustomMajorButton(
-              text: "Confirm Delivery Details",
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/confirm_delivery_details',
-                  arguments: ConfirmDeliveryArguments(
-                    customerName: args!.customerName,
-                    customerPhone: args!.customerPhone,
-                    // customerAddress: args!.customerAddress,
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+
+  Widget _buildStatusWidget(String title, String value, Color color) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          title,
+          // style: TextStyle(color: color),
+          style: mediumText.copyWith(color: color),
+        ),
+        Text(
+          value,
+          style: TextStyle(color: color),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailRow(String title, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+          ),
+          maxLines:
+              4, // Set the maximum number of lines before applying ellipsis
+          // overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
 }
+
+// class DeliveryDetailArguments {
+//   final String? itemType;
+//   final String? customerName;
+//   final String? customerPhone;
+//   final String? destination;
+
+//   DeliveryDetailArguments(
+//       {this.itemType, this.customerName, this.customerPhone, this.destination});
+// }

@@ -1,15 +1,15 @@
 class DeliveryNote {
   String? success;
-  List<Data>? data;
+  List<DeliveryData>? data;
 
   DeliveryNote({this.success, this.data});
 
   DeliveryNote.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     if (json['data'] != String) {
-      data = <Data>[];
+      data = <DeliveryData>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(DeliveryData.fromJson(v));
       });
     }
   }
@@ -24,7 +24,7 @@ class DeliveryNote {
   }
 }
 
-class Data {
+class DeliveryData {
   String? id;
   String? clintId;
   String? staffId;
@@ -45,28 +45,29 @@ class Data {
   String? createdAt;
   String? updatedAt;
 
-  Data(
-      {this.id,
-      this.clintId,
-      this.staffId,
-      this.customerName,
-      this.receiversName,
-      this.address,
-      this.itemType,
-      this.estimatedDateOfDelivery,
-      this.itemDescription,
-      this.itemQuantity,
-      this.customerPhone,
-      this.receiversPhone,
-      this.otp,
-      this.signature,
-      this.phote,
-      this.attachment,
-      this.status,
-      this.createdAt,
-      this.updatedAt});
+  DeliveryData({
+    this.id,
+    this.clintId,
+    this.staffId,
+    this.customerName,
+    this.receiversName,
+    this.address,
+    this.itemType,
+    this.estimatedDateOfDelivery,
+    this.itemDescription,
+    this.itemQuantity,
+    this.customerPhone,
+    this.receiversPhone,
+    this.otp,
+    this.signature,
+    this.phote,
+    this.attachment,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+  });
 
-  Data.fromJson(Map<String, dynamic> json) {
+  DeliveryData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     clintId = json['clint_id'];
     staffId = json['staff_id'];
@@ -111,4 +112,6 @@ class Data {
     data['updated_at'] = updatedAt;
     return data;
   }
+
+  toLowerCase() {}
 }

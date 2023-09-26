@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class CustomFormField extends StatelessWidget {
-  CustomFormField(
-      {super.key,
-      required this.name,
-      required this.hintText,
-      required this.controller,
-      this.validator,
-      this.onChange,
-      this.isPassword = false,
-      this.isPasswordVisible = false,
-      this.suffixIcon});
+  CustomFormField({
+    super.key,
+    required this.name,
+    required this.hintText,
+    required this.controller,
+    this.validator,
+    this.onChange,
+    this.isPassword = false,
+    this.isPasswordVisible = false,
+    this.suffixIcon,
+    this.prefixText,
+  });
   String? name;
   String? hintText;
   TextEditingController? controller;
@@ -21,45 +23,54 @@ class CustomFormField extends StatelessWidget {
   bool isPassword;
   bool isPasswordVisible;
   Widget? suffixIcon;
+  Widget? prefixText;
   @override
   Widget build(BuildContext context) {
-    return FormBuilderTextField(
-      name: name!,
-      obscureText: isPassword,
-      controller: controller!,
-      keyboardType: TextInputType.text,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.grey[200],
-        hintText: hintText,
-        enabledBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
+    return SizedBox(
+      height: 50,
+      child: FormBuilderTextField(
+        name: name!,
+        obscureText: isPassword,
+        controller: controller!,
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: 20,
           ),
-          borderSide: BorderSide.none,
-        ),
-        errorBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
+          filled: true,
+          fillColor: Colors.grey[200],
+          hintText: hintText,
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+            borderSide: BorderSide.none,
           ),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
+          errorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+            borderSide: BorderSide.none,
           ),
-          borderSide: BorderSide.none,
-        ),
-        focusedErrorBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+            borderSide: BorderSide.none,
           ),
-          borderSide: BorderSide.none,
+          focusedErrorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+            borderSide: BorderSide.none,
+          ),
+          suffixIcon: suffixIcon,
+          prefix: prefixText
         ),
-        suffixIcon: suffixIcon,
+        onChanged: onChange,
+        validator: validator,
       ),
-      onChanged: onChange,
-      validator: validator,
     );
   }
 }

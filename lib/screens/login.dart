@@ -1,10 +1,13 @@
 import 'package:e_delivery/constants.dart';
+import 'package:e_delivery/domain/models/staff_model.dart';
+import 'package:e_delivery/service/api_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../widgets/form_text_field.dart';
 import '../widgets/major_button.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,9 +17,44 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  APIServices? apiServices;
+  StaffData? staff;
+  Data? data;
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+  // Obtain shared preferences.
+
+  @override
+  void initState() {
+    super.initState();
+    apiServices = APIServices();
+  }
+
+  void login() async {
+    var res = await apiServices!.loginStaff(_email.text, _password.text);
+
+    if (res != "Invalid Credentials") {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('phone', res[0].phone!);
+      await prefs.setString('password', res[0].password!);
+      await prefs.setString('staff_id', res[0].id!);
+      await prefs.setString('client_id', res[0].clintId!);
+      await prefs.setString('firstname', res[0].firstname);
+      await prefs.setString('lastname', res[0].lastname);
+      await prefs.setString('email', res[0].email!);
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Invalid Credentials'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   final _formKey = GlobalKey<FormBuilderState>();
-  final TextEditingController _password = TextEditingController();
-  final TextEditingController _emailOrUsername = TextEditingController();
+
   bool isPasswordVisible = true;
   @override
   Widget build(BuildContext context) {
@@ -43,7 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Image.asset('assets/images/e-delivery_bg.jpeg',
                   fit: BoxFit.cover,
                   // color: Color.fromRGBO(255, 230, 179, 1.0).withOpacity(1),
-                  color: const Color.fromRGBO(255, 230, 179, 1.0).withOpacity(1),
+                  color:
+                      const Color.fromRGBO(255, 230, 179, 1.0).withOpacity(1),
                   colorBlendMode: BlendMode
                       .modulate // Adjust the image fitting as per your requirement
                   ),
@@ -98,18 +137,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             5.verticalSpace,
                             Text(
-                              'Username or email!',
+                              'Email!',
                               textAlign: TextAlign.start,
                               style: mediumText,
                             ),
                             5.verticalSpace,
                             CustomFormField(
                               name: 'email',
-                              hintText: "Enter Your Username or Email",
-                              controller: _emailOrUsername,
-                              onChange: (val) {
-                                print(val);
-                              },
+                              hintText: "Enter Email",
+                              controller: _email,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(),
                                 FormBuilderValidators.email(),
@@ -151,7 +187,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       2.verticalSpace,
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          login();
+                        },
                         style: TextButton.styleFrom(
                           textStyle: const TextStyle(
                             color: kPrimaryColor,
@@ -169,6 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: MediaQuery.of(context).viewInsets.bottom,
                       ),
                       CustomMajorButton(
+                          color: kTextColor,
                           text: 'Sign in',
                           onPressed: () {
                             _formKey.currentState?.saveAndValidate();
@@ -177,7 +216,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             // On another side, can access all field values without saving form with instantValues
                             var validate = _formKey.currentState?.validate();
                             if (validate!) {
-                              Navigator.pushReplacementNamed(context, '/home');
+                              login();
+
+                              // Navigator.pushReplacementNamed(context, '/home');
                             }
                             // debugPrint(
                             // _formKey.currentState?.instantValue.toString());

@@ -1,10 +1,10 @@
-class Staff {
+class StaffData {
   String? success;
   List<Data>? data;
 
-  Staff({this.success, this.data});
+  StaffData({this.success, this.data});
 
-  Staff.fromJson(Map<String, dynamic> json) {
+  StaffData.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     if (json['data'] != null) {
       data = <Data>[];
