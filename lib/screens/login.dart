@@ -22,6 +22,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Data? data;
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
+  bool _isLoading = false;
+
   // Obtain shared preferences.
 
   @override
@@ -31,9 +33,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login() async {
+    setState(() {
+      _isLoading = true;
+    });
     var res = await apiServices!.loginStaff(_email.text, _password.text);
 
     if (res != "Invalid Credentials") {
+      setState(() {
+        _isLoading = false;
+      });
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('phone', res[0].phone!);
       await prefs.setString('password', res[0].password!);
@@ -44,9 +52,12 @@ class _LoginScreenState extends State<LoginScreen> {
       await prefs.setString('email', res[0].email!);
       Navigator.pushReplacementNamed(context, '/home');
     } else {
+      setState(() {
+        _isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Invalid Credentials'),
+          content: Center(child: Text('Invalid Credentials')),
           backgroundColor: Colors.red,
         ),
       );
@@ -188,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       2.verticalSpace,
                       TextButton(
                         onPressed: () {
-                          login();
+                          // login();
                         },
                         style: TextButton.styleFrom(
                           textStyle: const TextStyle(
@@ -202,13 +213,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      1.verticalSpace,
+                      20.verticalSpace,
                       SizedBox(
                         height: MediaQuery.of(context).viewInsets.bottom,
                       ),
                       CustomMajorButton(
                           color: kTextColor,
-                          text: 'Sign in',
+                          text: _isLoading ? 'Signing in...' : 'Sign in',
                           onPressed: () {
                             _formKey.currentState?.saveAndValidate();
                             debugPrint(_formKey.currentState?.value.toString());
@@ -217,14 +228,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             var validate = _formKey.currentState?.validate();
                             if (validate!) {
                               login();
-
-                              // Navigator.pushReplacementNamed(context, '/home');
                             }
-                            // debugPrint(
-                            // _formKey.currentState?.instantValue.toString());
                           }),
-                      // const Spacer(),
-                      3.verticalSpace,
+                      1.verticalSpace,
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,

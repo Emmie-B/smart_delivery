@@ -29,7 +29,9 @@ class SettingsScreen extends StatelessWidget {
                       prefs.remove('phone');
                       prefs.remove('password');
                     });
-                    Navigator.pushNamed(context, '/login');
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/login', (Route route) => false);
+                    // Navigator.pushNamed(context, '/login');
                   }),
             ),
           ),

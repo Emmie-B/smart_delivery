@@ -661,7 +661,7 @@ class _ConfirmDeliveryProcessState extends State<ConfirmDeliveryProcess> {
                                           ),
                                   ],
                                 ),
-                                5.verticalSpace,
+                                10.verticalSpace,
                                 CustomMajorButton(
                                   text: "Confirm Delivery",
                                   onPressed: () {

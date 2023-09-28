@@ -14,7 +14,7 @@ class CustomMajorButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity, // Set a fixed width or use constraints
-      child: ElevatedButton(
+      child: TextButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: color ?? kPrimaryColor,

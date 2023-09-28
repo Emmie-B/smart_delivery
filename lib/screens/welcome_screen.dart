@@ -16,7 +16,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
-    getVlidationData(context);
+    // getVlidationData(context);
   }
 
   getVlidationData(BuildContext context) async {
