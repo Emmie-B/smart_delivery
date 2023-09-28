@@ -2,13 +2,12 @@ import 'package:e_delivery/constants.dart';
 import 'package:e_delivery/screens/dashboard.dart';
 import 'package:e_delivery/screens/orders.dart';
 import 'package:e_delivery/screens/settings.dart';
-import 'package:e_delivery/screens/track_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key, this.args});
 
-  var args;
+  final args;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

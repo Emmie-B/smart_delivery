@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../constants.dart';
 
 class CustomMajorButton extends StatelessWidget {
-  CustomMajorButton({super.key, required this.text, required this.onPressed, this.color});
-  final _formKey = GlobalKey<FormBuilderState>();
+  CustomMajorButton(
+      {super.key, required this.text, required this.onPressed, this.color});
 
   final String? text;
   final Function()? onPressed;
@@ -16,10 +15,9 @@ class CustomMajorButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity, // Set a fixed width or use constraints
       child: ElevatedButton(
-        
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: color?? kPrimaryColor,
+          backgroundColor: color ?? kPrimaryColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),

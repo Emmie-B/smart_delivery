@@ -17,8 +17,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   APIServices? apiServices;
   DeliveryData? deliveryData;
   DeliveryData? completeddeliveryData;
-  late Future<List<DeliveryData>>? deliveryDataFuture;
-  late Future<List<DeliveryData>>? completedDeliveryDataFuture;
+  Future<List<DeliveryData>>? deliveryDataFuture;
+  Future<List<DeliveryData>>? completedDeliveryDataFuture;
   String? firstname;
   String? lname;
   String? staf_id;
@@ -234,6 +234,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                     itemDescription:
                                         snapshot.data![index].itemDescription,
                                     noteId: snapshot.data![index].id,
+                                    size: snapshot.data!.length,
                                   );
                                 },
                                 itemCount: snapshot.data!.length,
@@ -242,8 +243,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           } else if (snapshot.hasError) {
                             return Center(
                               child: Text(
-                                snapshot.error.toString(),
-                              ),
+                                  // snapshot.error.toString(),
+                                  "An Error Occured while fetching data. Please check your internet connection"),
                             );
                           }
                           return const Text('No orders yet');
@@ -280,6 +281,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           height: 0.6.sh,
                           child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
+                            // physics: const BouncingScrollPhysics(),
+                            padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom),
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return CustomOrderTaskCard(
@@ -295,6 +300,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 itemDescription:
                                     snapshot.data![index].itemDescription,
                                 noteId: snapshot.data![index].id,
+                                size: snapshot.data!.length,
                               );
                             },
                             itemCount: snapshot.data!.length,
@@ -303,7 +309,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       } else if (snapshot.hasError) {
                         return Center(
                           child: Text(
-                            snapshot.error.toString(),
+                            // snapshot.error.toString(),
+                            "An Error Occured while fetching data. Please check your internet connection",
                           ),
                         );
                       }

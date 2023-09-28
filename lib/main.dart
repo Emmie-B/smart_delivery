@@ -5,18 +5,30 @@ import 'package:e_delivery/screens/orders.dart';
 import 'package:e_delivery/screens/track_screen.dart';
 import 'package:e_delivery/screens/welcome_screen.dart';
 import 'package:e_delivery/utilities/argument.dart';
+import 'package:e_delivery/utilities/sharedPrefBool.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/confirmDelivery/confirm_delivery_process.dart';
 import 'screens/home_screen.dart';
 
 // import 'package:flutter/cupertino.dart';
 
 void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await ScreenUtil.ensureScreenSize();
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
+  // getVlidationData();
 }
+
+final isUserSavedProvide = StateProvider<bool>((ref) {
+  return false;
+});
+
+// remove splash screen
 
 // void checkConnectivity() async {
 //   bool result = await InternetConnectionChecker().hasConnection;
@@ -39,6 +51,29 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // precached images
+  bool isUserSaved = false;
+  @override
+  void initState() {
+    super.initState();
+    getVlidationData();
+  }
+
+  getVlidationData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var phone = await prefs.getString('phone');
+    var password = await prefs.getString('password');
+    if (phone != null && password != null) {
+      setState(() {
+        isUserSaved = true;
+      });
+    } else {
+      setState(() {
+        isUserSaved = false;
+      });
+    }
+    FlutterNativeSplash.remove();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -56,9 +91,10 @@ class _MyAppState extends State<MyApp> {
       ensureScreenSize: true,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/',
+        home: isUserSaved ? HomeScreen() : WelcomeScreen(),
+        // initialRoute: '/',
         routes: {
-          '/': (context) => WelcomeScreen(),
+          // '/': (context) => WelcomeScreen(),
           '/login': (context) => const LoginScreen(),
           '/home': (context) => HomeScreen(
                 args: ModalRoute.of(context)!.settings.arguments,

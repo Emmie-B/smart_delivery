@@ -6,6 +6,7 @@ import '../utilities/argument.dart';
 
 // cupertino
 
+// ignore: must_be_immutable
 class CustomOrderTaskCard extends StatelessWidget {
   CustomOrderTaskCard({
     super.key,
@@ -17,6 +18,7 @@ class CustomOrderTaskCard extends StatelessWidget {
     this.itemQuantity,
     this.itemDescription,
     this.noteId,
+    this.size,
   });
   String? customerName;
   String? customerPhone;
@@ -27,6 +29,7 @@ class CustomOrderTaskCard extends StatelessWidget {
   String? itemQuantity;
   String? itemDescription;
   String? noteId;
+  int? size;
 
   Future<void> smsLauncher() async {
     final url = Uri(
@@ -50,16 +53,15 @@ class CustomOrderTaskCard extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(context, '/delivery_details',
             arguments: DeliveryDetailArguments(
-              customerName: customerName,
-              customerPhone: customerPhone,
-              itemType: itemType,
-              destination: destination,
-              itemQuantity: itemQuantity,
-              // estimatedDateOfDelivery: '2023-09-04 14:20:00',
-              itemDescription: itemDescription,
-              noteId: noteId,
-              status: status
-            ));
+                customerName: customerName,
+                customerPhone: customerPhone,
+                itemType: itemType,
+                destination: destination,
+                itemQuantity: itemQuantity,
+                // estimatedDateOfDelivery: '2023-09-04 14:20:00',
+                itemDescription: itemDescription,
+                noteId: noteId,
+                status: status));
       },
       child: Card(
         color: Colors.white,
@@ -68,11 +70,9 @@ class CustomOrderTaskCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(10).w,
           height: 165.h,
-          width: 0.9.sw,
+          width: size! <= 1 ? 0.95.sw : 0.9.sw,
           constraints: BoxConstraints(
-            minHeight: 165.h,
-            minWidth: 0.9.sw,
-          ),
+              minHeight: 165.h, minWidth: 0.9.sw, maxWidth: 1.sw),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

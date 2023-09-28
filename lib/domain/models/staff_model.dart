@@ -1,3 +1,4 @@
+
 class StaffData {
   String? success;
   List<Data>? data;
@@ -60,7 +61,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['clint_id'] = clintId;
     data['firstname'] = firstname;

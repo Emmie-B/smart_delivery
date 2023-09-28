@@ -279,7 +279,7 @@ class APIServices {
       String staffId, String noteId, String clientId) async {
     try {
       // Read the file as bytes
-      var filename = photo.path.split('/').last;
+      // var filename = photo.path.split('/').last;
 
       var photoBytes = await photo.readAsBytes();
 

@@ -1,6 +1,4 @@
-import 'package:e_delivery/Providers/providers.dart';
 import 'package:e_delivery/domain/models/delivery_note_model.dart';
-import 'package:e_delivery/screens/welcome_screen.dart';
 import 'package:e_delivery/service/api_services.dart';
 import 'package:e_delivery/widgets/delivery_note_card.dart';
 import 'package:flutter/material.dart';

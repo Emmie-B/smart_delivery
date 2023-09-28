@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
+// ignore: must_be_immutable
 class CustomFormField extends StatelessWidget {
   CustomFormField({
     super.key,

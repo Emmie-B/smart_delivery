@@ -1,7 +1,6 @@
 import 'package:e_delivery/domain/models/delivery_note_model.dart';
 // import 'package:e_delivery/screens/track_screen.dart';
 import 'package:e_delivery/service/api_services.dart';
-import 'package:e_delivery/utilities/argument.dart';
 import 'package:e_delivery/widgets/delivery_note_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,7 +63,10 @@ class _OrderScreenState extends State<OrderScreen> {
         automaticallyImplyLeading: false,
         leading: IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/home',);
+              Navigator.pushNamed(
+                context,
+                '/home',
+              );
             },
             icon: Icon(Icons.arrow_back)),
         title: Column(
@@ -91,6 +93,7 @@ class _OrderScreenState extends State<OrderScreen> {
               child: SearchableList<DeliveryData>(
                 initialList: deliveryData!,
                 autoFocusOnSearch: false,
+                
                 loadingWidget: const Center(
                   child: CircularProgressIndicator(),
                 ),
@@ -108,6 +111,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     itemQuantity: item.itemQuantity,
                     itemDescription: item.itemDescription,
                     noteId: item.id,
+                    size: displayedList.length,
                   );
                 }),
                 filter: (value) => deliveryData!
