@@ -20,7 +20,7 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   var phone = await prefs.getString('phone');
-  var password = await prefs.getString('password');
+  // var password = await prefs.getString('password');
   await ScreenUtil.ensureScreenSize();
   runApp(ProviderScope(
       child: MyApp(
