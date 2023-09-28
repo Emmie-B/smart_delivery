@@ -69,7 +69,7 @@ class CustomOrderTaskCard extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Container(
           padding: const EdgeInsets.all(10).w,
-          height: 165.h,
+          height: 163.h,
           width: size! <= 1 ? 0.95.sw : 0.9.sw,
           constraints: BoxConstraints(
               minHeight: 165.h, minWidth: 0.9.sw, maxWidth: 1.sw),

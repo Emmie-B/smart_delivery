@@ -43,7 +43,7 @@ TextStyle smallText = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
-const Color kPrimeColor = Color(0xff724EFA);
+const Color kPrimeColor = Color(0xff724efa);
 const Color kPrimaryColor = Color(0xff1E1926);
 const Color kPrimaryLightColor = Color(0xffe3dcfe);
 const Color kTextColor = Color(0xff1E1926);
